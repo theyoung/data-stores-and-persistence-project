@@ -1,25 +1,33 @@
-package com.udacity.jdnd.course3.critter.user;
+package com.udacity.jdnd.course3.critter.user.entities;
 
-import com.udacity.jdnd.course3.critter.user.entities.Employee;
+import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
 
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.time.DayOfWeek;
 import java.util.Set;
 
-/**
- * Represents the form that employee request and response data takes. Does not map
- * to the database directly.
- */
-public class EmployeeDTO {
-    private long id;
+@Entity
+public class Employee {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @NotNull
     private String name;
+
+    @ElementCollection
     private Set<EmployeeSkill> skills;
+
+    @ElementCollection
     private Set<DayOfWeek> daysAvailable;
 
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -45,15 +53,5 @@ public class EmployeeDTO {
 
     public void setDaysAvailable(Set<DayOfWeek> daysAvailable) {
         this.daysAvailable = daysAvailable;
-    }
-
-    public EmployeeDTO() {
-    }
-
-    public EmployeeDTO(Employee employee) {
-        this.id = employee.getId();
-        this.name = employee.getName();
-        this.skills = employee.getSkills();
-        this.daysAvailable = employee.getDaysAvailable();
     }
 }

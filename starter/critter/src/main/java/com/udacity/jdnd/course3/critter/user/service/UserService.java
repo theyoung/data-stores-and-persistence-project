@@ -23,7 +23,8 @@ public class UserService {
     }
 
     public List<Customer> getAllCustomers() {
-        return (List<Customer>) repository.findAll();
+        List<Customer> list = repository.findAll();
+        return list;
     }
 
     public Customer getCustomerById(long customerId) {

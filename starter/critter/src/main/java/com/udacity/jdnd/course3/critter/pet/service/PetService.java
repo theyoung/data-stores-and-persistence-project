@@ -4,8 +4,9 @@ import com.udacity.jdnd.course3.critter.pet.entities.Pet;
 import com.udacity.jdnd.course3.critter.pet.repository.PetRepository;
 import com.udacity.jdnd.course3.critter.user.entities.Customer;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -33,6 +34,7 @@ public class PetService {
     public Pet getPetById(long petId) {
         return repository.findById(petId).orElse(null);
     }
+
 
     public Customer getOwnerByPetID(Long petId){
         return repository.getCustomerByPetId(petId);
