@@ -1,6 +1,9 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.user.entities.Customer;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents the form that customer request and response data takes. Does not map
@@ -12,6 +15,19 @@ public class CustomerDTO {
     private String phoneNumber;
     private String notes;
     private List<Long> petIds;
+
+    public CustomerDTO() {
+    }
+
+    public CustomerDTO(Customer customer) {
+        this.id = customer.getCustomerId();
+        this.name = customer.getName();
+        this.phoneNumber = customer.getPhoneNumber();
+        this.notes = customer.getNotes();
+        if (customer.getPets() != null) {
+            this.petIds = customer.getPets().stream().map(pet-> pet.getId()).collect(Collectors.toList());
+        }
+    }
 
     public long getId() {
         return id;

@@ -1,10 +1,18 @@
 package com.udacity.jdnd.course3.critter.user;
 
+import com.udacity.jdnd.course3.critter.pet.entities.Pet;
+import com.udacity.jdnd.course3.critter.pet.service.PetService;
+import com.udacity.jdnd.course3.critter.user.entities.Customer;
+import com.udacity.jdnd.course3.critter.user.service.UserService;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
+import javax.validation.Valid;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Handles web requests related to Users.
@@ -16,30 +24,58 @@ import java.util.Set;
 @RequestMapping("/user")
 public class UserController {
 
+    UserService service;
+    PetService petService;
+
+    public UserController(UserService service, PetService petService) {
+        this.service = service;
+        this.petService = petService;
+    }
+
+
     @PostMapping("/customer")
-    public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO){
-        throw new UnsupportedOperationException();
+    public CustomerDTO saveCustomer(@Valid @RequestBody CustomerDTO customerDTO){
+        Customer customer = new Customer();
+        customer.setName(customerDTO.getName());
+        customer.setPhoneNumber(customerDTO.getPhoneNumber());
+        customer.setNotes(customerDTO.getNotes());
+
+        customer = service.saveCustomer(customer);
+        return new CustomerDTO(customer);
     }
 
     @GetMapping("/customer")
     public List<CustomerDTO> getAllCustomers(){
-        throw new UnsupportedOperationException();
+        return service.getAllCustomers().stream().map(CustomerDTO::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/customer/{customerId}")
+    public CustomerDTO getCustomerById(@PathVariable long customerId){
+        return new CustomerDTO(service.getCustomerById(customerId));
     }
 
     @GetMapping("/customer/pet/{petId}")
     public CustomerDTO getOwnerByPet(@PathVariable long petId){
-        throw new UnsupportedOperationException();
+        Customer customer = petService.getOwnerByPetID(petId);
+        if (customer == null) {
+            throw new IllegalArgumentException("Pet id does not exist");
+        }
+
+        return new CustomerDTO(customer);
     }
+
 
     @PostMapping("/employee")
     public EmployeeDTO saveEmployee(@RequestBody EmployeeDTO employeeDTO) {
         throw new UnsupportedOperationException();
     }
 
+
     @PostMapping("/employee/{employeeId}")
     public EmployeeDTO getEmployee(@PathVariable long employeeId) {
         throw new UnsupportedOperationException();
     }
+
 
     @PutMapping("/employee/{employeeId}")
     public void setAvailability(@RequestBody Set<DayOfWeek> daysAvailable, @PathVariable long employeeId) {
