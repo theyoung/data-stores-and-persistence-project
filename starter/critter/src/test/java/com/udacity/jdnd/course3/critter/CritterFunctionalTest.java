@@ -34,7 +34,7 @@ import java.util.stream.IntStream;
  */
 //@DataJpaTest
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(classes = CritterApplication.class)
 public class CritterFunctionalTest {
@@ -54,7 +54,7 @@ public class CritterFunctionalTest {
     @Transactional
     @Test
     @Rollback(true)
-    @Order(1)
+//    @Order(1)
     public void testCreateCustomer(){
         CustomerDTO customerDTO = createCustomerDTO();
         CustomerDTO newCustomer = userController.saveCustomer(customerDTO);
@@ -79,7 +79,7 @@ public class CritterFunctionalTest {
     @Transactional(propagation = Propagation.SUPPORTS)
     @Rollback
     @Test
-    @Order(2)
+//    @Order(2)
     public void testAddPetsToCustomer() {
         CustomerDTO customerDTO = createCustomerDTO();
         CustomerDTO newCustomer = userController.saveCustomer(customerDTO);
