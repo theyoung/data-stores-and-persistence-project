@@ -5,6 +5,7 @@ import com.udacity.jdnd.course3.critter.user.entities.Employee;
 import com.udacity.jdnd.course3.critter.user.repository.EmployeeRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.DayOfWeek;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +19,7 @@ public class EmployeeService {
         this.repository = repository;
     }
 
+    @Transactional
     public Employee save(Employee employee) {
         return repository.save(employee);
     }
@@ -26,6 +28,7 @@ public class EmployeeService {
         return repository.findById(employeeId).get();
     }
 
+    @Transactional
     public void setAvailability(Set<DayOfWeek> daysAvailable, long employeeId) {
         Employee employee = repository.findById(employeeId).get();
         employee.setDaysAvailable(daysAvailable);

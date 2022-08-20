@@ -5,6 +5,7 @@ import com.udacity.jdnd.course3.critter.schedule.entities.Schedule;
 import com.udacity.jdnd.course3.critter.schedule.repository.ScheduleRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class ScheduleService {
         this.repository = repository;
     }
 
+    @Transactional
     public Schedule saveSchedule(Schedule schedule) {
         return repository.save(schedule);
     }
