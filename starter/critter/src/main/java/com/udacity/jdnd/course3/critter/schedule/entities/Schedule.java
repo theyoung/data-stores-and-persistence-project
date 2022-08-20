@@ -1,45 +1,37 @@
-package com.udacity.jdnd.course3.critter.schedule;
+package com.udacity.jdnd.course3.critter.schedule.entities;
 
-import com.udacity.jdnd.course3.critter.schedule.entities.Schedule;
 import com.udacity.jdnd.course3.critter.user.EmployeeSkill;
-import com.udacity.jdnd.course3.critter.user.entities.Employee;
 
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
-/**
- * Represents the form that schedule request and response data takes. Does not map
- * to the database directly.
- */
-public class ScheduleDTO {
-    private long id;
+@Entity
+public class Schedule {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    @ElementCollection
     private List<Long> employeeIds;
+
+    @ElementCollection
     private List<Long> petIds;
+
     private LocalDate date;
+
+    @ElementCollection
     private Set<EmployeeSkill> activities;
 
-    public ScheduleDTO() {
-    }
-
-    public ScheduleDTO(Schedule schedule) {
-        this.employeeIds = new ArrayList<>(schedule.getEmployeeIds());
-        this.petIds = new ArrayList<>(schedule.getPetIds());
-        this.date = schedule.getDate();
-        this.activities = new HashSet<>(schedule.getActivities());
-    }
-
-    public long getId(){
+    public Long getId() {
         return id;
     }
-    
-    public void setId(long id){
+
+    public void setId(Long id) {
         this.id = id;
     }
-    
+
     public List<Long> getEmployeeIds() {
         return employeeIds;
     }

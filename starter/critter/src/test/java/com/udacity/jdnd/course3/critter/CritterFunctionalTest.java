@@ -11,6 +11,8 @@ import com.udacity.jdnd.course3.critter.user.*;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,7 @@ import java.util.stream.IntStream;
  */
 //@DataJpaTest
 //@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+//@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @SpringBootTest(classes = CritterApplication.class)
 public class CritterFunctionalTest {
@@ -50,6 +53,7 @@ public class CritterFunctionalTest {
 
     @Transactional
     @Test
+    @Rollback(true)
     @Order(1)
     public void testCreateCustomer(){
         CustomerDTO customerDTO = createCustomerDTO();
@@ -61,6 +65,7 @@ public class CritterFunctionalTest {
     }
 
     @Transactional
+    @Rollback(true)
     @Test
     public void testCreateEmployee(){
         EmployeeDTO employeeDTO = createEmployeeDTO();
@@ -72,7 +77,9 @@ public class CritterFunctionalTest {
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)
+    @Rollback
     @Test
+    @Order(2)
     public void testAddPetsToCustomer() {
         CustomerDTO customerDTO = createCustomerDTO();
         CustomerDTO newCustomer = userController.saveCustomer(customerDTO);
@@ -99,6 +106,7 @@ public class CritterFunctionalTest {
 
 
     @Transactional
+    @Rollback(true)
     @Test
     public void testFindPetsByOwner() {
         CustomerDTO customerDTO = createCustomerDTO();
@@ -119,6 +127,7 @@ public class CritterFunctionalTest {
 
 
     @Transactional(propagation = Propagation.SUPPORTS)
+    @Rollback(true)
     @Test
     public void testFindOwnerByPet() {
         CustomerDTO customerDTO = createCustomerDTO();
@@ -134,6 +143,7 @@ public class CritterFunctionalTest {
     }
 
     @Transactional
+    @Rollback(true)
     @Test
     public void testChangeEmployeeAvailability() {
         EmployeeDTO employeeDTO = createEmployeeDTO();
@@ -148,6 +158,7 @@ public class CritterFunctionalTest {
     }
 
     @Transactional
+    @Rollback(true)
     @Test
     public void testFindEmployeesByServiceAndTime() {
         EmployeeDTO emp1 = createEmployeeDTO();
@@ -186,6 +197,7 @@ public class CritterFunctionalTest {
     }
 
     @Transactional
+    @Rollback(true)
     @Test
     public void testSchedulePetsForServiceWithEmployee() {
         EmployeeDTO employeeTemp = createEmployeeDTO();
@@ -210,7 +222,8 @@ public class CritterFunctionalTest {
         Assertions.assertEquals(scheduleDTO.getPetIds(), petList);
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.SUPPORTS)
+    @Rollback(true)
     @Test
     public void testFindScheduleByEntities() {
         ScheduleDTO sched1 = populateSchedule(1, 2, LocalDate.of(2019, 12, 25), Sets.newHashSet(EmployeeSkill.FEEDING, EmployeeSkill.WALKING));

@@ -26,7 +26,6 @@ public class PetController {
         this.userService = userService;
     }
 
-    @Transactional
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
         Long ownerId = petDTO.getOwnerId();
