@@ -42,4 +42,8 @@ public class EmployeeService {
                 .filter(employee -> employee.getSkills().containsAll(skills))
                 .collect(Collectors.toList());
     }
+
+    public List<Employee> getAllEmployeesByEmployeeIds(List<Long> employeeIds) {
+        return repository.findAllById(employeeIds);
+    }
 }

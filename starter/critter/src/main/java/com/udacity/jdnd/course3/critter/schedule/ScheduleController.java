@@ -5,10 +5,12 @@ import com.udacity.jdnd.course3.critter.pet.service.PetService;
 import com.udacity.jdnd.course3.critter.schedule.entities.Schedule;
 import com.udacity.jdnd.course3.critter.schedule.service.ScheduleService;
 import com.udacity.jdnd.course3.critter.user.entities.Customer;
+import com.udacity.jdnd.course3.critter.user.entities.Employee;
 import com.udacity.jdnd.course3.critter.user.service.EmployeeService;
 import com.udacity.jdnd.course3.critter.user.service.UserService;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.DayOfWeek;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,8 +34,29 @@ public class ScheduleController {
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
-        Schedule schedule = getScheduleFromScheduleDTO(scheduleDTO);
+        List<Long> petIds = scheduleDTO.getPetIds();
+        List<Long> employeeIds = scheduleDTO.getEmployeeIds();
 
+        List<Employee> employees = employeeService.getAllEmployeesByEmployeeIds(employeeIds);
+        if(employees.size() != employeeIds.size()) {
+            throw new IllegalArgumentException("One or more Employee do not exist");
+        }
+
+        DayOfWeek dayOfWeek = scheduleDTO.getDate().getDayOfWeek();
+
+        employees.stream().forEach(employee -> {
+            if(!employee.getDaysAvailable().contains(dayOfWeek)) {
+                throw new IllegalArgumentException(employee.getName() + " is not available on " + dayOfWeek);
+            }
+        });
+
+
+        List<Pet> pets = petService.getAllPetsByPetIds(petIds);
+        if(pets.size() != petIds.size()) {
+            throw new IllegalArgumentException("One or more pets do not exist");
+        }
+
+        Schedule schedule = getScheduleFromScheduleDTO(scheduleDTO);
         return new ScheduleDTO(scheduleService.saveSchedule(schedule));
     }
 
